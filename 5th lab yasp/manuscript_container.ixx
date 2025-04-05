@@ -14,7 +14,6 @@ private:
     std::vector<T> data;
 
 public:
-
     void add(const T& element, bool to_left = false) {
         if (to_left) data.insert(data.begin(), element);
         else data.push_back(element);
@@ -64,6 +63,10 @@ public:
         }
     }
 
+    template<typename U>
+    friend std::ostream& operator<<(std::ostream& out, const manuscript_container<U>& container);
+
+
     std::vector<T> select_by_author(const std::string& author) const {
         return data | std::views::filter([&](const T& m) {
             return m.author == author;
@@ -87,3 +90,11 @@ public:
 
     const std::vector<T>& get_all() const { return data; }
 };
+
+export template<typename T>
+std::ostream& operator<<(std::ostream& out, const manuscript_container<T>& container) {
+    for (const auto& el : container.data) {
+        out << el << '\n';
+    }
+    return out;
+}
