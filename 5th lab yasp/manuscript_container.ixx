@@ -14,6 +14,7 @@ private:
     std::vector<T> data;
 
 public:
+
     void add(const T& element, bool to_left = false) {
         if (to_left) data.insert(data.begin(), element);
         else data.push_back(element);
