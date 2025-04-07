@@ -1,2 +1,2 @@
-Behold the ancient truth. | Aurelian  | unknown | 1420-3-12
-Secrets of the veil. | Seraphinus  | unknown | 1555-9-30
+Behold the ancient truth. | Aurelian | tablet | 1420-3-12
+Secrets of the veil. | Seraphinus | book | 1555-9-30

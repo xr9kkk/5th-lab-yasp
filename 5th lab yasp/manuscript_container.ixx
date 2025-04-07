@@ -57,11 +57,11 @@ public:
         }
     }
 
-    void print() const {
+    /*void print() const {
         for (const auto& el : data) {
             std::cout << el << "\n";
         }
-    }
+    }*/
 
     template<typename U>
     friend std::ostream& operator<<(std::ostream& out, const manuscript_container<U>& container);
@@ -93,6 +93,9 @@ public:
 
 export template<typename T>
 std::ostream& operator<<(std::ostream& out, const manuscript_container<T>& container) {
+    if (container.size() == 0)
+        std::cout << "container is empty!\n";
+    
     for (const auto& el : container.data) {
         out << el << '\n';
     }
