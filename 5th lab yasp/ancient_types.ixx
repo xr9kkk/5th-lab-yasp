@@ -73,6 +73,7 @@ export manuscript_type manuscript_type_from_string(const std::string& str) {
 	};
 
 	auto it = type_map.find(str);
+	//std::cout << typeid(it).name() << std::endl;
 	if (it != type_map.end()) return it->second;
 
 	std::cout << "unknown type \n";

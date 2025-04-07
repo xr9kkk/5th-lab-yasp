@@ -1,6 +1,6 @@
 export module manuscript_container;
 
-import <vector>;
+import <deque>;
 import <fstream>;
 import <ranges>;
 import <algorithm>;
@@ -11,11 +11,11 @@ import ancient_types;
 export template<typename T>
 class manuscript_container {
 private:
-    std::vector<T> data;
+    std::deque<T> data;
 
 public:
     void add(const T& element, bool to_left = false) {
-        if (to_left) data.insert(data.begin(), element);
+        if (to_left) data.push_front(element);
         else data.push_back(element);
     }
 
@@ -57,15 +57,8 @@ public:
         }
     }
 
-    /*void print() const {
-        for (const auto& el : data) {
-            std::cout << el << "\n";
-        }
-    }*/
-
     template<typename U>
     friend std::ostream& operator<<(std::ostream& out, const manuscript_container<U>& container);
-
 
     std::vector<T> select_by_author(const std::string& author) const {
         return data | std::views::filter([&](const T& m) {
@@ -88,14 +81,14 @@ public:
 
     size_t size() const { return data.size(); }
 
-    const std::vector<T>& get_all() const { return data; }
+    const std::deque<T>& get_all() const { return data; }
 };
 
 export template<typename T>
 std::ostream& operator<<(std::ostream& out, const manuscript_container<T>& container) {
     if (container.size() == 0)
-        std::cout << "container is empty!\n";
-    
+        std::cout << "Библиотека пуста\n";
+
     for (const auto& el : container.data) {
         out << el << '\n';
     }

@@ -3,88 +3,44 @@ import ancient_types;
 
 #include <iostream>
 #include <string>
-#include <type_traits>
 
 using container_t = manuscript_container<manuscript>;
 
 void print_menu() {
-	std::cout << "\n--- Ancient Manuscript Library ---\n";
-	std::cout << "1. Load manuscripts from file\n";
-	std::cout << "2. Show all manuscripts\n";
-	std::cout << "3. Add manuscript (left/right)\n";
-	std::cout << "4. Remove manuscript (left/right)\n";
-	std::cout << "5. Update manuscript (left/right)\n";
-	std::cout << "6. Select by author\n";
-	std::cout << "7. Select by text length range\n";
-	std::cout << "8. Select by creation date range\n";
-	std::cout << "9. Save manuscripts to file\n";
-	std::cout << "0. Exit\n";
+	std::cout << "\n--- Библиотека древних рукописей ---\n";
+	std::cout << "1. Загрузить рукописи из файла\n";
+	std::cout << "2. Показать все рукописи\n";
+	std::cout << "3. Добавить рукопись (влево/вправо)\n";
+	std::cout << "4. Удалить рукопись (влево/вправо)\n";
+	std::cout << "5. Обновить рукопись (влево/вправо)\n";
+	std::cout << "6. Поиск по автору\n";
+	std::cout << "7. Поиск по длине текста\n";
+	std::cout << "8. Поиск по дате создания\n";
+	std::cout << "9. Сохранить рукописи в файл\n";
+	std::cout << "0. Выход\n";
 }
-
-
-	//template<typename T>
-	//T read_and_check(const std::string& prompt) {
-	//	T value;
-	//	while (true) {
-	//		std::cout << prompt;
-	//		std::cin >> value;
-	//
-	//		if (std::cin.fail()) {
-	//			std::cin.clear(); 
-	//			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	//			std::cout << "Invalid input. Try again.\n";
-	//			continue;
-	//		}
-	//
-	//		if constexpr (std::is_arithmetic<T>::value) {
-	//			if (value < 0) {
-	//				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	//				std::cout << "Negative values are not allowed. Try again.\n";
-	//				continue;
-	//			}
-	//		}
-	//
-	//		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	//		return value;
-	//	}
-	//}
-	//
-	//template<>
-	//std::string read_and_check<std::string>(const std::string& prompt) {
-	//	std::string line;
-	//	while (true) {
-	//		if (!prompt.empty()) std::cout << prompt;
-	//		if (!std::getline(std::cin, line) || line.empty()) {
-	//			std::cout << "Invalid input. Try again.\n";
-	//			std::cin.clear();
-	//		}
-	//		else {
-	//			return line;
-	//		}
-	//	}
-	//}
 
 manuscript input_manuscript() {
 	manuscript m;
-	std::cout << "Enter manuscript details (text | author | type | year-month-day):\n";
-	std::cin >> m;  // использование перегруженного оператора >>
+	std::cout << "Введите данные рукописи (текст | автор | тип | год-месяц-день):\n";
+	std::cin >> m;
 	return m;
 }
 
-
 int main() {
+	setlocale(LC_ALL, "ru");
 	container_t library;
 	int choice;
 
 	while (true) {
 		print_menu();
-		choice = read_and_check<int>("Choice: ");
+		choice = read_and_check<int>("Выбор: ");
 
 		switch (choice) {
 		case 1: {
-			std::string filename = read_and_check<std::string>("Enter file name: ");
+			std::string filename = read_and_check<std::string>("Введите имя файла: ");
 			library.read_from_file(filename);
-			std::cout << "Loaded.\n";
+			std::cout << "Загрузка завершена.\n";
 			break;
 		}
 		case 2:
@@ -92,7 +48,7 @@ int main() {
 			break;
 
 		case 3: {
-			bool to_left = read_and_check<bool>("Insert to left (1) or right (0)? ");
+			bool to_left = read_and_check<bool>("Добавить влево (1) или вправо (0)? ");
 			auto m = input_manuscript();
 			library.add(m, to_left);
 			break;
@@ -100,31 +56,35 @@ int main() {
 
 		case 4: {
 			if (library.size() == 0) {
-				std::cout << "Library is empty.\n";
+				std::cout << "Библиотека пуста.\n";
 				break;
 			}
-			bool from_left = read_and_check<bool>("Remove from left (1) or right (0)? ");
+			bool from_left = read_and_check<bool>("Удалить слева (1) или справа (0)? ");
 			size_t index = from_left ? 0 : library.size() - 1;
 			library.remove_by_index(index);
-			std::cout << "Removed.\n";
+			std::cout << "Удалено.\n";
 			break;
 		}
 
 		case 5: {
 			if (library.size() == 0) {
-				std::cout << "Library is empty.\n";
+				std::cout << "Библиотека пуста.\n";
 				break;
 			}
-			bool from_left = read_and_check<bool>("Update left (1) or right (0)? ");
+			bool from_left = read_and_check<bool>("Обновить слева (1) или справа (0)? ");
 			size_t index = from_left ? 0 : library.size() - 1;
 			auto m = input_manuscript();
 			library.update(index, m);
-			std::cout << "Updated.\n";
+			std::cout << "Обновлено.\n";
 			break;
 		}
 
 		case 6: {
-			std::string author = read_and_check<std::string>("Enter author name: ");
+			if (library.size() == 0) {
+				std::cout << "Библиотека пуста.\n";
+				break;
+			}
+			std::string author = read_and_check<std::string>("Введите имя автора: ");
 			auto results = library.select_by_author(author);
 			for (const auto& m : results)
 				std::cout << m << "\n";
@@ -132,8 +92,12 @@ int main() {
 		}
 
 		case 7: {
-			size_t min_len = read_and_check<size_t>("Enter min text length: ");
-			size_t max_len = read_and_check<size_t>("Enter max text length: ");
+			if (library.size() == 0) {
+				std::cout << "Библиотека пуста.\n";
+				break;
+			}
+			size_t min_len = read_and_check<size_t>("Минимальная длина текста: ");
+			size_t max_len = read_and_check<size_t>("Максимальная длина текста: ");
 			auto results = library.select_by_length(min_len, max_len);
 			for (const auto& m : results)
 				std::cout << m << "\n";
@@ -141,12 +105,16 @@ int main() {
 		}
 
 		case 8: {
-			int y1 = read_and_check<int>("Enter start year: ");
-			int m1 = read_and_check<int>("Enter start month: ");
-			int d1 = read_and_check<int>("Enter start day: ");
-			int y2 = read_and_check<int>("Enter end year: ");
-			int m2 = read_and_check<int>("Enter end month: ");
-			int d2 = read_and_check<int>("Enter end day: ");
+			if (library.size() == 0) {
+				std::cout << "Библиотека пуста.\n";
+				break;
+			}
+			int y1 = read_and_check<int>("Начальный год: ");
+			int m1 = read_and_check<int>("Начальный месяц: ");
+			int d1 = read_and_check<int>("Начальный день: ");
+			int y2 = read_and_check<int>("Конечный год: ");
+			int m2 = read_and_check<int>("Конечный месяц: ");
+			int d2 = read_and_check<int>("Конечный день: ");
 			auto results = library.select_by_date(
 				std::chrono::year{ y1 } / m1 / d1,
 				std::chrono::year{ y2 } / m2 / d2);
@@ -156,18 +124,22 @@ int main() {
 		}
 
 		case 9: {
-			std::string filename = read_and_check<std::string>("Enter file name: ");
+			if (library.size() == 0) {
+				std::cout << "Библиотека пуста.\n";
+				break;
+			}
+			std::string filename = read_and_check<std::string>("Введите имя файла: ");
 			library.write_to_file(filename);
-			std::cout << "Saved.\n";
+			std::cout << "Сохранено.\n";
 			break;
 		}
 
 		case 0:
-			std::cout << "Goodbye!\n";
+			std::cout << "До свидания!\n";
 			return 0;
 
 		default:
-			std::cout << "Invalid choice.\n";
+			std::cout << "Неверный выбор.\n";
 			break;
 		}
 	}
