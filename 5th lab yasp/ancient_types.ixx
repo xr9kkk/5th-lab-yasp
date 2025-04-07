@@ -76,7 +76,7 @@ export manuscript_type manuscript_type_from_string(const std::string& str) {
 	//std::cout << typeid(it).name() << std::endl;
 	if (it != type_map.end()) return it->second;
 
-	std::cout << "unknown type \n";
+	std::cout << "Неизвестный тип \n";
 	return manuscript_type::unknown;
 }
 
@@ -115,14 +115,14 @@ T read_and_check(const std::string& prompt) {
 		if (std::cin.fail()) {
 			std::cin.clear(); // сброс ошибки
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			std::cout << "Invalid input. Try again.\n";
+			std::cout << "Неправильный ввод, повторите еще раз.\n";
 			continue;
 		}
 
 		if constexpr (std::is_arithmetic<T>::value) {
 			if (value < 0) {
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				std::cout << "Negative values are not allowed. Try again.\n";
+				std::cout << "Отрицательный значения невозможны, повторите еще раз\n";
 				continue;
 			}
 		}
@@ -138,7 +138,7 @@ export std::string read_and_check_string(const std::string& prompt) {
 		std::cout << prompt;
 		std::getline(std::cin, value);
 		if (value.empty()) {
-			std::cout << "Input cannot be empty. Try again.\n";
+			std::cout << "Ввод не может быть пустой, повторите еще раз\n";
 			continue;
 		}
 		return value;
@@ -182,7 +182,7 @@ export std::string read_and_check_string(const std::string& prompt) {
 
 export std::istream& operator>>(std::istream& in, manuscript& m) {
 	if (&in != &std::cin) {
-		// старый режим — из файла или строки
+		//для файла или строки
 		std::string line;
 		if (!std::getline(in, line)) return in;
 
@@ -203,7 +203,7 @@ export std::istream& operator>>(std::istream& in, manuscript& m) {
 		std::istringstream date_stream(date_str);
 
 		if (!(date_stream >> year >> dash1 >> month >> dash2 >> day) || !is_valid_date(year, month, day)) {
-			std::cerr << "Invalid date format in input.\n";
+			std::cout << "Неправильный формат даты в файле.\n";
 			in.setstate(std::ios::failbit);
 			return in;
 		}
@@ -212,30 +212,30 @@ export std::istream& operator>>(std::istream& in, manuscript& m) {
 		return in;
 	}
 
-	// интерактивный ввод
-	m.text = trim(read_and_check_string("Enter text: "));
-	m.author = trim(read_and_check_string("Enter author: "));
+	// ввод вручную
+	m.text = trim(read_and_check_string("Введите текст: "));
+	m.author = trim(read_and_check_string("Введите автора: "));
 
 	while (true) {
-		std::string type_str = trim(read_and_check_string("Enter type (tablet, parchment, scroll, book): "));
+		std::string type_str = trim(read_and_check_string("Введите тип: "));
 		try {
 			m.type = manuscript_type_from_string(type_str);
 			break;
 		}
 		catch (...) {
-			std::cout << "Invalid type. Try again.\n";
+			std::cout << "Неправильный ввод, повторите еще раз.\n";
 		}
 	}
 
-	int year = read_and_check<int>("Enter year: ");
-	int month = read_and_check<int>("Enter month: ");
-	int day = read_and_check<int>("Enter day: ");
+	int year = read_and_check<int>("Введите год: ");
+	int month = read_and_check<int>("Введите месяц: ");
+	int day = read_and_check<int>("Введите день: ");
 
 	while (!is_valid_date(year, month, day)) {
-		std::cout << "Invalid date. Try again.\n";
-		year = read_and_check<int>("Enter year: ");
-		month = read_and_check<int>("Enter month: ");
-		day = read_and_check<int>("Enter day: ");
+		std::cout << "Неправильный ввод, повторите еще раз.\n";
+		year = read_and_check<int>("Введите год: ");
+		month = read_and_check<int>("Введите месяц: ");
+		day = read_and_check<int>("Введите день: ");
 	}
 
 	m.creation_date = std::chrono::year{ year } / month / day;
