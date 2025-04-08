@@ -72,7 +72,7 @@ export manuscript_type manuscript_type_from_string(const std::string& str) {
 		{"book", manuscript_type::book}
 	};
 
-	auto it = type_map.find(str);
+	std::unordered_map<std::string, manuscript_type>::const_iterator it = type_map.find(str);
 	//std::cout << typeid(it).name() << std::endl;
 	if (it != type_map.end()) return it->second;
 
@@ -81,8 +81,8 @@ export manuscript_type manuscript_type_from_string(const std::string& str) {
 }
 
 export std::string trim(const std::string& s) {
-	auto start = s.find_first_not_of(" \t\n\r");
-	auto end = s.find_last_not_of(" \t\n\r");
+	size_t start = s.find_first_not_of(" \t\n\r");
+	size_t end = s.find_last_not_of(" \t\n\r");
 	return (start == std::string::npos || end == std::string::npos)
 		? ""
 		: s.substr(start, end - start + 1);
@@ -204,7 +204,7 @@ export std::istream& operator>>(std::istream& in, manuscript& m) {
 
 		if (!(date_stream >> year >> dash1 >> month >> dash2 >> day) || !is_valid_date(year, month, day)) {
 			std::cout << "Неправильный формат даты в файле.\n";
-			in.setstate(std::ios::failbit);
+			in.setstate(std::ios::failbit); //устанавливается флаг ошибки 
 			return in;
 		}
 

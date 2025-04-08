@@ -25,14 +25,6 @@ public:
         return true;
     }
 
-    bool remove_by_value(const T& value) {
-        auto it = std::find(data.begin(), data.end(), value);
-        if (it != data.end()) {
-            data.erase(it);
-            return true;
-        }
-        return false;
-    }
 
     bool update(size_t index, const T& new_value) {
         if (index >= data.size()) return false;
@@ -41,14 +33,23 @@ public:
     }
 
     void read_from_file(const std::string& file_name) {
-        std::ifstream file(file_name);
-        if (!file) return;
+        try {
+            std::ifstream file(file_name);
+            if (!file.is_open()) {
+                throw std::runtime_error("Файл не удалось открыть.");
+            }
 
-        T temp;
-        while (file >> temp) {
-            data.push_back(temp);
+            T temp;
+            while (file >> temp) {
+                data.push_back(temp);
+            }
+            std::cout << "Загрузка завершена.\n";
+        }
+        catch (const std::exception& e) {
+            std::cout << "Ошибка при чтении файла: " << e.what() << "\n";
         }
     }
+
 
     void write_to_file(const std::string& file_name) const {
         std::ofstream file(file_name);
@@ -61,7 +62,7 @@ public:
     friend std::ostream& operator<<(std::ostream& out, const manuscript_container<U>& container);
 
     std::vector<T> select_by_author(const std::string& author) const {
-        return data | std::views::filter([&](const T& m) {
+        return data | std::views::filter([&](const T& m) { //result = adapter1(adapter2(...(data))) | используется как pipeline  
             return m.author == author;
             }) | std::ranges::to<std::vector>();
     }

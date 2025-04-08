@@ -40,7 +40,7 @@ int main() {
 		case 1: {
 			std::string filename = read_and_check<std::string>("Введите имя файла: ");
 			library.read_from_file(filename);
-			std::cout << "Загрузка завершена.\n";
+			/*std::cout << "Загрузка завершена.\n";*/
 			break;
 		}
 		case 2:
@@ -49,7 +49,7 @@ int main() {
 
 		case 3: {
 			bool to_left = read_and_check<bool>("Добавить влево (1) или вправо (0)? ");
-			auto m = input_manuscript();
+			manuscript m = input_manuscript();
 			library.add(m, to_left);
 			break;
 		}
@@ -73,7 +73,7 @@ int main() {
 			}
 			bool from_left = read_and_check<bool>("Обновить слева (1) или справа (0)? ");
 			size_t index = from_left ? 0 : library.size() - 1;
-			auto m = input_manuscript();
+			manuscript m = input_manuscript();
 			library.update(index, m);
 			std::cout << "Обновлено.\n";
 			break;
@@ -85,7 +85,7 @@ int main() {
 				break;
 			}
 			std::string author = read_and_check<std::string>("Введите имя автора: ");
-			auto results = library.select_by_author(author);
+			std::vector<manuscript> results = library.select_by_author(author);
 			for (const auto& m : results)
 				std::cout << m << "\n";
 			break;
@@ -98,7 +98,7 @@ int main() {
 			}
 			size_t min_len = read_and_check<size_t>("Минимальная длина текста: ");
 			size_t max_len = read_and_check<size_t>("Максимальная длина текста: ");
-			auto results = library.select_by_length(min_len, max_len);
+			std::vector<manuscript> results = library.select_by_length(min_len, max_len);
 			for (const auto& m : results)
 				std::cout << m << "\n";
 			break;
@@ -115,7 +115,7 @@ int main() {
 			int y2 = read_and_check<int>("Конечный год: ");
 			int m2 = read_and_check<int>("Конечный месяц: ");
 			int d2 = read_and_check<int>("Конечный день: ");
-			auto results = library.select_by_date(
+			std::vector<manuscript> results = library.select_by_date(
 				std::chrono::year{ y1 } / m1 / d1,
 				std::chrono::year{ y2 } / m2 / d2);
 			for (const auto& m : results)
