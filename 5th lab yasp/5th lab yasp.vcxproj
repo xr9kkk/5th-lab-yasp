@@ -131,6 +131,8 @@
     <ClCompile Include="ancient_types.ixx" />
     <ClCompile Include="FileName.cpp" />
     <ClCompile Include="manuscript_container.ixx" />
+    <ClCompile Include="printable_container.ixx" />
+    <ClCompile Include="temple.ixx" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="file.txt" />
