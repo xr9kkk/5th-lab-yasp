@@ -3,8 +3,13 @@ import ancient_types;
 
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using container_t = manuscript_container<manuscript>;
+
+
+void print_to_file(container_t& container);
+void read_from_file(container_t& container);
 
 void print_menu() {
 	std::cout << "\n--- Библиотека древних рукописей ---\n";
@@ -59,6 +64,7 @@ int main() {
 				std::cout << "Библиотека пуста.\n";
 				break;
 			}
+			
 			bool from_left = read_and_check<bool>("Удалить слева (1) или справа (0)? ");
 			size_t index = from_left ? 0 : library.size() - 1;
 			library.remove_by_index(index);
@@ -79,15 +85,20 @@ int main() {
 			break;
 		}
 
+		
+
 		case 6: {
 			if (library.size() == 0) {
 				std::cout << "Библиотека пуста.\n";
 				break;
 			}
 			std::string author = read_and_check<std::string>("Введите имя автора: ");
-			std::vector<manuscript> results = library.select_by_author(author);
-			for (const auto& m : results)
-				std::cout << m << "\n";
+			auto results = library.selection([&author](const manuscript& m) {
+				return m.get_author() == author;
+				});
+			
+
+			std::cout << results;
 			break;
 		}
 
@@ -98,9 +109,12 @@ int main() {
 			}
 			size_t min_len = read_and_check<size_t>("Минимальная длина текста: ");
 			size_t max_len = read_and_check<size_t>("Максимальная длина текста: ");
-			std::vector<manuscript> results = library.select_by_length(min_len, max_len);
-			for (const auto& m : results)
-				std::cout << m << "\n";
+			auto results = library.selection([min_len, max_len](const manuscript& m) {
+				size_t len = m.get_text().size();
+				return len >= min_len && len <= max_len;
+				});
+			
+			std::cout << results;
 			break;
 		}
 
@@ -115,11 +129,14 @@ int main() {
 			int y2 = read_and_check<int>("Конечный год: ");
 			int m2 = read_and_check<int>("Конечный месяц: ");
 			int d2 = read_and_check<int>("Конечный день: ");
-			std::vector<manuscript> results = library.select_by_date(
-				std::chrono::year{ y1 } / m1 / d1,
-				std::chrono::year{ y2 } / m2 / d2);
-			for (const auto& m : results)
-				std::cout << m << "\n";
+			auto results = library.selection(
+				[y1, m1, d1, y2, m2, d2](const manuscript& m) {
+					auto date = m.get_creation_date();
+					return date >= (std::chrono::year{ y1 } / m1 / d1) &&
+						date <= (std::chrono::year{ y2 } / m2 / d2);
+				});
+
+			std::cout << results;
 			break;
 		}
 
@@ -128,8 +145,7 @@ int main() {
 				std::cout << "Библиотека пуста.\n";
 				break;
 			}
-			std::string filename = read_and_check<std::string>("Введите имя файла: ");
-			library.write_to_file(filename);
+			print_to_file(library);
 			std::cout << "Сохранено.\n";
 			break;
 		}
@@ -143,4 +159,30 @@ int main() {
 			break;
 		}
 	}
+}
+
+void print_to_file(container_t& container)
+{
+	std::string filename = read_and_check<std::string>("Введите имя файла: ");
+	std::ofstream file(filename);
+	if (!file.is_open())
+	{
+		std::cerr << "Ошибка открытия файла для записи!\n";
+		return;
+	}
+	try
+	{
+		file << container;
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Ошибка при записи в файл: " << e.what() << '\n';
+	}
+	file.close();
+}
+
+void read_from_file(container_t& container)
+{
+	
+	
 }
