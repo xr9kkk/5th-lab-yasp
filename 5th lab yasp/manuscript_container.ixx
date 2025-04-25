@@ -26,7 +26,7 @@ public:
         return true;
     }
 
-   
+
 
     bool update(size_t index, const T& new_value) {
         if (index >= container.size()) return false;
@@ -42,7 +42,7 @@ public:
                 throw std::runtime_error("Файл не удалось открыть.");
             }
 
-            file >> *this;  
+            file >> *this;
 
             std::cout << "Загрузка завершена.\n";
         }
@@ -50,7 +50,7 @@ public:
             std::cout << "Ошибка при чтении файла: " << e.what() << "\n";
         }
     }
-     
+
 
     void print(std::ostream_iterator<T> it)
     {

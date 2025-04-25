@@ -131,12 +131,17 @@
     <ClCompile Include="ancient_types.ixx" />
     <ClCompile Include="FileName.cpp" />
     <ClCompile Include="manuscript_container.ixx" />
+    <ClCompile Include="manuscript_serialization.ixx" />
     <ClCompile Include="printable_container.ixx" />
     <ClCompile Include="temple.ixx" />
+    <ClCompile Include="Temple_manager.ixx" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="file.txt" />
     <Text Include="out.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nlohmann.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

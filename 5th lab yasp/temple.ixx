@@ -1,13 +1,16 @@
 export module temple;
 
 #include <string>
+#include "nlohmann.hpp"
+#include <chrono>
 
-import manuscript_container;
 import ancient_types;
 import printable_container;
+import manuscript_serialization;
 
-using container_t = manuscript_container<manuscript>;
 using cont_p = printable_container;
+using json = nlohmann::json;
+
 
 struct Temple
 {
@@ -30,7 +33,7 @@ public:
 
 	bool remove_manuscript(size_t index) { return manuscripts.remove_by_index(index); }
 
-	container_t& get_manuscript() { return manuscripts; }
+	cont_p& get_manuscript() { return manuscripts; }
 
 	const std::string& get_name() const { return name; }
 	const std::string& get_monk_name() const { return monk_name; }
@@ -62,4 +65,13 @@ public:
 	bool will_copy() const {
 		return std::rand() % 100 < diligence;
 	}
+
+	void load_manuscript(const json& j) {
+		for (const auto& item : j) {
+			manuscript m;
+			item.get_to(m);
+			manuscripts.add(m);  
+		}
+	}
+
 };

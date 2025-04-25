@@ -1,4 +1,4 @@
-export module printable_container;
+п»їexport module printable_container;
 
 import manuscript_container;
 import ancient_types;
@@ -14,7 +14,6 @@ public:
     using manuscript_container<manuscript>::selection;
     using manuscript_container<manuscript>::size;
 
-    // Мы реализуем operator<< без доступа к полю container
     friend std::ostream& operator<<(std::ostream& out, const printable_container& pc) {
         std::ostringstream temp;
         std::ostream_iterator<manuscript> it(temp, "\n");

@@ -30,9 +30,20 @@
     <ClCompile Include="printable_container.ixx">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Temple_manager.ixx">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="manuscript_serialization.ixx">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="file.txt" />
     <Text Include="out.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nlohmann.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
